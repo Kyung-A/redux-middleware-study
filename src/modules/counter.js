@@ -8,6 +8,15 @@ const DECREASE = "counter/DECREASE";
 export const increase = () => ({ type: INCREASE });
 export const decrease = () => ({ type: DECREASE });
 
+// Redux-Thunk 사용하기
+// Thunk는 액션 타입이 함수일 경우 next()가 생략된다
+export const increaseAsync = () => (dispatch) => {
+  setTimeout(() => dispatch(increase()), 1000);
+};
+export const decreaseAsync = () => (dispatch) => {
+  setTimeout(() => dispatch(decrease()), 1000);
+};
+
 // 초깃값
 const initialState = 0;
 
