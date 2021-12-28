@@ -9,6 +9,8 @@ import logger from "redux-logger";
 import { composeWithDevTools } from "redux-devtools-extension";
 import ReduxThunk from "redux-thunk";
 
+import { BrowserRouter } from "react-router-dom";
+
 // 여러개의 미들웨어 등록 가능 (myLogger, logger)
 const store = createStore(
   rootReducer,
@@ -17,8 +19,10 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>,
   document.getElementById("root")
 );
