@@ -1,7 +1,9 @@
 import * as postsAPI from "../api/posts"; // 모든 함수 불러오기
 import {
   createPromiseThunk,
+  createPromiseThunkById,
   handleAsyncActions,
+  handleAsyncActionsById,
   reducerUtils,
 } from "../lib/asyncUtils";
 
@@ -26,14 +28,14 @@ const CLEAR_POST = "CLEAR_POST";
 // thunk를 사용할때 꼭 모든 액션들에 대하여 액션 생섬함수를 만들필요 없이 바로 thunk 함수 안에서 만들어도됨
 // Thunk 함수들 리팩토링
 export const getPosts = createPromiseThunk(GET_POSTS, postsAPI.getPosts);
-export const getPost = createPromiseThunk(GET_POST, postsAPI.getPostById);
+export const getPost = createPromiseThunkById(GET_POST, postsAPI.getPostById);
 
 // 포스트 비우기 액션 생성 함수
 export const clearPost = () => ({ type: CLEAR_POST });
 
 const initialState = {
   posts: reducerUtils.initial(),
-  post: reducerUtils.initial(),
+  post: {},
 };
 
 // 리듀서
@@ -49,12 +51,7 @@ export default function posts(state = initialState, action) {
     case GET_POST:
     case GET_POST_SUCCESS:
     case GET_POST_ERROR:
-      return handleAsyncActions(GET_POST, "post")(state, action);
-    case CLEAR_POST:
-      return {
-        ...state,
-        post: reducerUtils.initial(),
-      };
+      return handleAsyncActionsById(GET_POST, "post")(state, action);
     default:
       return state;
   }

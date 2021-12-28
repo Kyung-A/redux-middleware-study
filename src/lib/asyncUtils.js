@@ -47,7 +47,7 @@ export const reducerUtils = {
   }),
 };
 
-// 비동기 관련 액션들을 처리하는 리듀서
+// 비동기 관련 액션들을 처리하는 리듀서 (유틸함수)
 // type = 액션 타입, key = 상태의 key(posts, post)
 export const handleAsyncActions = (type, key, keepData = false) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
@@ -69,6 +69,71 @@ export const handleAsyncActions = (type, key, keepData = false) => {
         return {
           ...state,
           [key]: reducerUtils.error(action.payload),
+        };
+      default:
+        return state;
+    }
+  };
+};
+
+// 특정 id를 처리하는 Thunk 생성 함수
+const defaultIdSelector = (param) => param;
+
+export const createPromiseThunkById = (
+  type,
+  promiseCreator,
+  idSelector = defaultIdSelector
+) => {
+  const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
+
+  return (param) => async (dispatch) => {
+    const id = idSelector(param);
+    dispatch({ type, meta: id });
+
+    try {
+      const payload = await promiseCreator(param);
+
+      dispatch({ type: SUCCESS, payload, meta: id });
+    } catch (e) {
+      dispatch({ type: ERROR, error: true, payload: e, meta: id });
+    }
+  };
+};
+
+// id별로 처리하는 리듀서 (유틸함수)
+export const handleAsyncActionsById = (type, key, keepData = false) => {
+  const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
+
+  return (state, action) => {
+    const id = action.meta;
+
+    switch (action.type) {
+      case type:
+        return {
+          ...state,
+          [key]: {
+            ...state[key],
+            [id]: reducerUtils.loading(
+              // 유효성 검사
+              keepData ? state[key][id] && state[key][id].data : null
+            ),
+          },
+        };
+      case SUCCESS:
+        return {
+          ...state,
+          [key]: {
+            ...state[key],
+            [id]: reducerUtils.success(action.payload),
+          },
+        };
+      case ERROR:
+        return {
+          ...state,
+          [key]: {
+            ...state[key],
+            [id]: reducerUtils.error(action.payload),
+          },
         };
       default:
         return state;
