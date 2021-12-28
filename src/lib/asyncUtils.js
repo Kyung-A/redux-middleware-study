@@ -49,7 +49,7 @@ export const reducerUtils = {
 
 // 비동기 관련 액션들을 처리하는 리듀서
 // type = 액션 타입, key = 상태의 key(posts, post)
-export const handleAsyncActions = (type, key) => {
+export const handleAsyncActions = (type, key, keepData = false) => {
   const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
 
   return (state, action) => {
@@ -57,7 +57,8 @@ export const handleAsyncActions = (type, key) => {
       case type:
         return {
           ...state,
-          [key]: reducerUtils.loading(),
+          // [key]: reducerUtils.loading(),
+          [key]: reducerUtils.loading(keepData ? state[key].data : null), // keepData 라는 파라미터를 추가 -> 만약 이 값이 true로 주어지면 로딩을 할 때에도 데이터를 유지
         };
       case SUCCESS:
         return {

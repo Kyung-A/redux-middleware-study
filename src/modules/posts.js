@@ -39,7 +39,7 @@ export default function posts(state = initialState, action) {
       // const postsReducer = handleAsyncActions(GET_POSTS, 'posts');
       // return postsReducer(state, action);
       // 위 주석을 간단히 하면
-      return handleAsyncActions(GET_POSTS, "posts")(state, action);
+      return handleAsyncActions(GET_POSTS, "posts", true)(state, action);
     case GET_POST:
     case GET_POST_SUCCESS:
     case GET_POST_ERROR:
