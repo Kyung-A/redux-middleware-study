@@ -19,7 +19,7 @@ export const createPromiseThunk = (type, promiseCreator) => {
   };
 };
 
-// 리듀서에서 사용 할 수 있는 여러 유팅 함수
+// 리듀서에서 사용 할 수 있는 여러 유틸 함수
 export const reducerUtils = {
   // 초기상태, 초기 data 값은 기본적으로 null이지만 바꿀 수도 있음
   initial: (initialData = null) => ({
@@ -45,4 +45,32 @@ export const reducerUtils = {
     data: null,
     error: error,
   }),
+};
+
+// 비동기 관련 액션들을 처리하는 리듀서
+// type = 액션 타입, key = 상태의 key(posts, post)
+export const handleAsyncActions = (type, key) => {
+  const [SUCCESS, ERROR] = [`${type}_SUCCESS`, `${type}_ERROR`];
+
+  return (state, action) => {
+    switch (action.type) {
+      case type:
+        return {
+          ...state,
+          [key]: reducerUtils.loading(),
+        };
+      case SUCCESS:
+        return {
+          ...state,
+          [key]: reducerUtils.success(action.payload),
+        };
+      case ERROR:
+        return {
+          ...state,
+          [key]: reducerUtils.error(action.payload),
+        };
+      default:
+        return state;
+    }
+  };
 };
