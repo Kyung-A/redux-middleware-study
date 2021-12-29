@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Post from "../components/Post";
-import { clearPost, getPost } from "../modules/posts";
+import { clearPost, getPost, goToHome } from "../modules/posts";
 
 function PostContainer({ postId }) {
   // 아예 데이터가 존재하지 않을때가 있으므로 비구조 할당이 오류나지 않도록 작성
@@ -24,7 +24,12 @@ function PostContainer({ postId }) {
   if (error) return <div>에러 발생!</div>;
   if (!data) return null;
 
-  return <Post post={data} />;
+  return (
+    <>
+      <button onClick={() => dispatch(goToHome())}>홈으로 이동</button>
+      <Post post={data} />
+    </>
+  );
 }
 
 export default PostContainer;
