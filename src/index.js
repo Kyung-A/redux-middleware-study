@@ -19,7 +19,11 @@ import { HistoryRouter } from "./HistoryRouter";
 const history = createBrowserHistory();
 
 // 사가 미들웨어
-const sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware({
+  context: {
+    history: history,
+  },
+});
 
 // 여러개의 미들웨어 등록 가능 (myLogger, logger)
 const store = createStore(
